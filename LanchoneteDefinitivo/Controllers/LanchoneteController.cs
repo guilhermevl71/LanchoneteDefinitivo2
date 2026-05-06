@@ -7,6 +7,6 @@ namespace LanchoneteDefinitivo.Controllers
     [Route("[Controller]")]
     public class LanchoneteController : ControllerBase
     {
-
+        [HttpGet]
     }
 }
