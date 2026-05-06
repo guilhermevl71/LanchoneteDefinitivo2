@@ -1,0 +1,6 @@
+@LanchoneteDefinitivo_HostAddress = http://localhost:5219
+
+GET {{LanchoneteDefinitivo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
