@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LanchoneteDefinitivo.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LanchoneteDefinitivo.Controllers
 {
@@ -7,6 +8,16 @@ namespace LanchoneteDefinitivo.Controllers
     [Route("[Controller]")]
     public class LanchoneteController : ControllerBase
     {
+        private LanchoneteContext _context;
+        public LanchoneteController(LanchoneteContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
+        public void GerarCardapio()
+        {
+             return 
+        }
     }
 }
