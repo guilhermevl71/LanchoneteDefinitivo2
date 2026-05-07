@@ -1,4 +1,5 @@
 ﻿using LanchoneteDefinitivo.Data;
+using LanchoneteDefinitivo.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LanchoneteDefinitivo.Controllers
@@ -14,10 +15,17 @@ namespace LanchoneteDefinitivo.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public void GerarCardapio()
+        [HttpPost]
+        public void AdicionarProduto(Produto p)
         {
-             return 
+            _context.Produtos.Add(p);
+            _context.SaveChanges();
+        }
+
+        [HttpGet]
+        public List<Produto> GerarCardapio()
+        {
+            return _context.Produtos.ToList();
         }
     }
 }

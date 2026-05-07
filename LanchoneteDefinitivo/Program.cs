@@ -11,12 +11,18 @@ builder.Services.AddControllers();
 var LanchoneteConnection = builder.Configuration.GetConnectionString("LanchoneteConnection");
 builder.Services.AddDbContext<LanchoneteContext>(opts => opts.UseMySql(LanchoneteConnection, ServerVersion.AutoDetect(LanchoneteConnection)));
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
