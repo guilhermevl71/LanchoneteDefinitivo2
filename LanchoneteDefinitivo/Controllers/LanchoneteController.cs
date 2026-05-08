@@ -23,9 +23,11 @@ namespace LanchoneteDefinitivo.Controllers
         }
 
         [HttpGet]
-        public List<Produto> GerarCardapio()
+        public IActionResult GerarCardapio()
         {
-            return _context.Produtos.ToList();
+            var cardapio = _context.Produtos.GroupBy(p => p.Tipo!).ToDictionary(grupo => grupo.Key, grupo => grupo.ToList());
+
+            return Ok(cardapio);
         }
     }
 }
