@@ -43,7 +43,7 @@ namespace LanchoneteDefinitivo.Controllers
 
             if (p == null)
             {
-                return BadRequest();
+                return BadRequest("Produto não encontrado.");
             }
             _context.Produtos.Remove(p);
             _context.SaveChanges();
@@ -59,7 +59,7 @@ namespace LanchoneteDefinitivo.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult AtualizarProduto(int id, Produto produtoAtualizado)
+        public IActionResult AtualizarProduto(int id, UpdateProductDto produtodto)
         {
             var produto = _context.Produtos.FirstOrDefault(p => p.Id == id);
 
@@ -67,17 +67,17 @@ namespace LanchoneteDefinitivo.Controllers
                 return NotFound("Produto não encontrado");
             }
 
-            produto.Nome = produtoAtualizado.Nome;
-            produto.Tipo = produtoAtualizado.Tipo;
-            produto.Preco = produtoAtualizado.Preco;
+            produto.Nome = produtodto.Nome;
+            produto.Tipo = produtodto.Tipo;
+            produto.Preco = produtodto.Preco;
             _context.SaveChanges();
             return Ok(produto);
         }
 
         [HttpPost("carrinho")]
-        public IActionResult AdicionarAoCarrinho(int quantidade, int produtoId, int pedidoId)
+        public IActionResult AdicionarAoCarrinho(AddCartDto cartdto)
         {
-            var produto = _context.Produtos.FirstOrDefault(p => p.Id == produtoId);
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == cartdto.ProdutoId);
 
             if (produto == null)
             {
@@ -86,9 +86,9 @@ namespace LanchoneteDefinitivo.Controllers
 
             var itemPedido = new ItemPedido
             {
-                ProdutoId = produto.Id, // tem que tirar
-                PedidoId = pedidoId,
-                Quantidade = quantidade,
+                ProdutoId = cartdto.ProdutoId, // tem que tirar
+                PedidoId = cartdto.PedidoId,
+                Quantidade = cartdto.Quantidade,
                 PrecoUnitario = produto.Preco
             };
 
