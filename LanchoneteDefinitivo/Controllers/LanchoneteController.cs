@@ -1,5 +1,7 @@
 ﻿using LanchoneteDefinitivo.Data;
+using LanchoneteDefinitivo.Data.Dtos;
 using LanchoneteDefinitivo.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LanchoneteDefinitivo.Controllers
@@ -15,11 +17,37 @@ namespace LanchoneteDefinitivo.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        public void AdicionarProduto(Produto p)
+        [HttpPost("produto")]
+        public IActionResult AdicionarProduto(CreateProductDto prodructcreated)
         {
+            if (prodructcreated == null)
+            {
+                return BadRequest();
+            }
+
+            Produto p = new Produto
+            {
+                Nome = prodructcreated.Nome,
+                Tipo = prodructcreated.Tipo,
+                Preco = prodructcreated.Preco,
+            };
             _context.Produtos.Add(p);
             _context.SaveChanges();
+            return Created();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletarProduto(int id)
+        {
+            Produto? p = _context.Produtos.FirstOrDefault(p => p.Id == id);
+
+            if (p == null)
+            {
+                return BadRequest();
+            }
+            _context.Produtos.Remove(p);
+            _context.SaveChanges();
+            return Ok("Produto Removido!");
         }
 
         [HttpGet]
@@ -29,5 +57,46 @@ namespace LanchoneteDefinitivo.Controllers
 
             return Ok(cardapio);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult AtualizarProduto(int id, Produto produtoAtualizado)
+        {
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == id);
+
+            if (produto == null) {
+                return NotFound("Produto não encontrado");
+            }
+
+            produto.Nome = produtoAtualizado.Nome;
+            produto.Tipo = produtoAtualizado.Tipo;
+            produto.Preco = produtoAtualizado.Preco;
+            _context.SaveChanges();
+            return Ok(produto);
+        }
+
+        [HttpPost("carrinho")]
+        public IActionResult AdicionarAoCarrinho(int quantidade, int produtoId, int pedidoId)
+        {
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == produtoId);
+
+            if (produto == null)
+            {
+                return NotFound("Produto não encontrado");
+            }
+
+            var itemPedido = new ItemPedido
+            {
+                ProdutoId = produto.Id, // tem que tirar
+                PedidoId = pedidoId,
+                Quantidade = quantidade,
+                PrecoUnitario = produto.Preco
+            };
+
+            _context.ItemPedidos.Add(itemPedido);
+            _context.SaveChanges();
+            return Ok(itemPedido);
+
+        }
     }
+
 }
