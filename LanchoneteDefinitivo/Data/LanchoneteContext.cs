@@ -7,7 +7,9 @@ namespace LanchoneteDefinitivo.Data
     {
         public LanchoneteContext(DbContextOptions<LanchoneteContext> opts) : base(opts) { }
 
-        public DbSet<Cliente> Clientes { get; set; }
+        //public DbSet<Cliente> Clientes { get; set; }
+
+        public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ItemPedido> ItemPedidos { get; set; }
         public DbSet<Pagamentos> Pagamentos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
