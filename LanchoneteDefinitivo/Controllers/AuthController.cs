@@ -21,7 +21,7 @@ namespace LanchoneteDefinitivo.Controllers
             _context = context;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public IActionResult Register(RegisterDto registerDto)
         {
             bool emailverifc = _context.Usuarios.Any(user => user.Email == registerDto.Email);
@@ -35,7 +35,7 @@ namespace LanchoneteDefinitivo.Controllers
             user.Email = registerDto.Email;
             user.Name = registerDto.Name;
             user.Password = registerDto.Password;
-            user.Role = "cliente";
+            user.Role = registerDto.Role;
 
 
             _context.Usuarios.Add(user);

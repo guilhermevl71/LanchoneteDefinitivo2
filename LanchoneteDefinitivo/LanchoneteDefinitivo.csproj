@@ -24,8 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\html\" />
-    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
 </Project>

@@ -18,7 +18,7 @@ namespace LanchoneteDefinitivo.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "cliente")]
+        [Authorize(Roles = "admin")]
         [HttpPost("produto")]
         public IActionResult AdicionarProduto(CreateProductDto prodructcreated)
         {
@@ -38,6 +38,7 @@ namespace LanchoneteDefinitivo.Controllers
             return Created();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public IActionResult DeletarProduto(int id)
         {
@@ -60,6 +61,7 @@ namespace LanchoneteDefinitivo.Controllers
             return Ok(cardapio);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public IActionResult AtualizarProduto(int id, UpdateProductDto produtodto)
         {
@@ -86,19 +88,33 @@ namespace LanchoneteDefinitivo.Controllers
                 return NotFound("Produto não encontrado");
             }
 
+            // cria pedido automaticamente
+            Pedido pedido = new Pedido
+            {
+                Valortotal = 0
+            };
+
+            _context.Pedidos.Add(pedido);
+
+            _context.SaveChanges();
+
             var itemPedido = new ItemPedido
             {
-                ProdutoId = cartdto.ProdutoId, // tem que tirar
-                PedidoId = cartdto.PedidoId,
+                ProdutoId = cartdto.ProdutoId,
+                PedidoId = pedido.Id,
                 Quantidade = cartdto.Quantidade,
                 PrecoUnitario = produto.Preco
             };
 
             _context.ItemPedidos.Add(itemPedido);
+
             _context.SaveChanges();
+
             return Ok(itemPedido);
 
         }
     }
+
+
 
 }

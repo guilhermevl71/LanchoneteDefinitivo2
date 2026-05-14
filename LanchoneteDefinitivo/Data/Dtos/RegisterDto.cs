@@ -15,5 +15,9 @@ namespace LanchoneteDefinitivo.Data.Dtos
         [Required]
         [StringLength(20)]
         public string? Password { get; set; }
+
+        [Required]
+        [StringLength(10)]
+        public string? Role { get; set; }
     }
 }
