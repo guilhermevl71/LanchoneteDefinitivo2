@@ -10,7 +10,7 @@ namespace LanchoneteDefinitivo.Models
         [Required]
         public decimal Valortotal { get; set; }
 
-        public int? ClienteId { get; set; }
+        public int ClienteId { get; set; }
         public Cliente? Cliente { get; set; }
     }
 }
