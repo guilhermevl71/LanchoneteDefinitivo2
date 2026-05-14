@@ -40,13 +40,6 @@ async function carregarCardapio() {
                                     R$ ${produto.preco}
                                 </p>
 
-                                <button 
-                                    class="btn btn-primary"
-                                    onclick="adicionarCarrinho(${produto.id})"
-                                >
-                                    Adicionar
-                                </button>
-
                             </div>
 
                         </div>
