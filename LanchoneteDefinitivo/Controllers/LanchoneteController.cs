@@ -1,6 +1,7 @@
 ﻿using LanchoneteDefinitivo.Data;
 using LanchoneteDefinitivo.Data.Dtos;
 using LanchoneteDefinitivo.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace LanchoneteDefinitivo.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "cliente")]
         [HttpPost("produto")]
         public IActionResult AdicionarProduto(CreateProductDto prodructcreated)
         {
