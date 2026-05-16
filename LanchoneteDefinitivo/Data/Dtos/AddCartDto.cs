@@ -10,8 +10,5 @@ namespace LanchoneteDefinitivo.Data.Dtos
 
         [Required]
         public int ProdutoId { get; set; }
-
-        //[Required]
-        //public int PedidoId { get; set; }
     }
 }

@@ -10,6 +10,8 @@ async function carregarCardapio() {
 
         console.log(data);
 
+        cardapioDiv.innerHTML = "";
+
         // percorre categorias
         for (const categoria in data) {
 
@@ -39,6 +41,13 @@ async function carregarCardapio() {
                                 <p class="fw-bold">
                                     R$ ${produto.preco}
                                 </p>
+
+                                <button 
+                                    class="btn btn-primary"
+                                    onclick="adicionarCarrinho(${produto.id})"
+                                >
+                                    Adicionar
+                                </button>
 
                             </div>
 
@@ -73,9 +82,10 @@ async function adicionarCarrinho(produtoId) {
     }
 
     const carrinho = {
+
         produtoId: produtoId,
-        pedidoId: 1,
         quantidade: 1
+
     };
 
     try {
@@ -85,8 +95,10 @@ async function adicionarCarrinho(produtoId) {
             method: "POST",
 
             headers: {
+
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
+
             },
 
             body: JSON.stringify(carrinho)
@@ -94,6 +106,10 @@ async function adicionarCarrinho(produtoId) {
         });
 
         if (!response.ok) {
+
+            const erro = await response.text();
+
+            console.log(erro);
 
             alert("Erro ao adicionar no carrinho");
             return;
@@ -105,6 +121,8 @@ async function adicionarCarrinho(produtoId) {
     } catch (error) {
 
         console.log(error);
+
+        alert("Erro ao conectar API");
 
     }
 

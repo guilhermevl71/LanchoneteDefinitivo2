@@ -4,6 +4,7 @@ using LanchoneteDefinitivo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LanchoneteDefinitivo.Controllers
 {
@@ -78,25 +79,36 @@ namespace LanchoneteDefinitivo.Controllers
             return Ok(produto);
         }
 
+        [Authorize]
         [HttpPost("carrinho")]
         public IActionResult AdicionarAoCarrinho(AddCartDto cartdto)
         {
             var produto = _context.Produtos.FirstOrDefault(p => p.Id == cartdto.ProdutoId);
 
             if (produto == null)
-            {
                 return NotFound("Produto não encontrado");
-            }
 
-            // cria pedido automaticamente
-            Pedido pedido = new Pedido
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (claim == null)
             {
-                Valortotal = 0
-            };
+                return Unauthorized("Usuário não autenticado");
+            }
+            var usuarioId = int.Parse(claim);
 
-            _context.Pedidos.Add(pedido);
+            var pedido = _context.Pedidos
+                .FirstOrDefault(p => p.UsuarioId == usuarioId);
 
-            _context.SaveChanges();
+            if (pedido == null)
+            {
+                pedido = new Pedido
+                {
+                    UsuarioId = usuarioId,
+                    Valortotal = 0
+                };
+
+                _context.Pedidos.Add(pedido);
+                _context.SaveChanges();
+            }
 
             var itemPedido = new ItemPedido
             {
@@ -108,9 +120,33 @@ namespace LanchoneteDefinitivo.Controllers
 
             _context.ItemPedidos.Add(itemPedido);
 
+            pedido.Valortotal += produto.Preco * cartdto.Quantidade;
+
             _context.SaveChanges();
 
             return Ok(itemPedido);
+        }
+
+        [HttpGet("MostrarCarrinho")]
+        [Authorize]
+        public IActionResult MostrarCarrinho()
+        {
+            // pega id do usuario logado, NameIdentifier = id
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (claim == null)
+            {
+                return Unauthorized();
+            }
+            int usuarioId = int.Parse(claim);
+            var pedido = _context.Pedidos.FirstOrDefault(p => p.UsuarioId == usuarioId);
+
+            if (pedido == null)
+            {
+                return NotFound("Carrinho Vazio");
+            }
+            var itens = _context.ItemPedidos.Where(i => i.PedidoId == pedido.Id).ToList();
+            return Ok(itens);
 
         }
     }
