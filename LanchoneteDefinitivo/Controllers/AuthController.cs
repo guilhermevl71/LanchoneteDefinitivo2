@@ -28,7 +28,7 @@ namespace LanchoneteDefinitivo.Controllers
 
             if (emailverifc)
             {
-                return BadRequest();
+                return BadRequest("Email ja cadastrado");
             }
 
             Usuario user = new Usuario();
@@ -40,7 +40,10 @@ namespace LanchoneteDefinitivo.Controllers
 
             _context.Usuarios.Add(user);
             _context.SaveChanges();
-            return Ok("Usuario criado.");
+            return Ok(new
+            {
+                message = "Usuario criado."
+            });
         }
 
         [HttpPost("login")]
